@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#12283a">
+<title>SmartPark TRACE — Admin Workspace</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body class="premium-app">
+<a href="#dashboard" class="skip">Skip to dashboard</a>
+<button type="button" class="menu-btn" id="phase9MenuBtn" aria-label="Open navigation" aria-controls="Sidebar" aria-expanded="false"><span aria-hidden="true">☰</span><span>Menu</span></button>
+<button type="button" class="backdrop" id="phase9Backdrop" aria-label="Close navigation" tabindex="-1"></button>
+<div class="shell">
+<aside id="Sidebar" aria-label="SmartPark navigation">
+  <div class="brand"><b><i class="fa-solid fa-square-parking"></i></b><div><strong>SmartPark <span>TRACE</span></strong><small>Building intelligence</small></div><button type="button" id="sidebarCollapse" class="sidebar-collapse" aria-label="Collapse sidebar" aria-expanded="true" title="Collapse navigation"><i class="fa-solid fa-angles-left"></i></button></div>
+  <div class="side-label">WORKSPACE NAVIGATION</div>
+  <nav>
+    <button class="nav active" data-page="dashboard"><i class="fa-solid fa-chart-pie"></i><span>Dashboard</span></button>
+    <button class="nav" data-page="parking"><i class="fa-solid fa-car-side"></i><span>Parking Map</span></button>
+    <button class="nav" data-page="buildings"><i class="fa-solid fa-building"></i><span>Buildings & Floors</span></button>
+    <button class="nav" data-page="routes"><i class="fa-solid fa-route"></i><span>Route Navigator</span></button>
+    <button class="nav" data-page="entry"><i class="fa-solid fa-right-to-bracket"></i><span>Vehicle Entry</span></button>
+    <button class="nav" data-page="exit"><i class="fa-solid fa-right-from-bracket"></i><span>Vehicle Exit</span></button>
+    <button class="nav" data-page="search"><i class="fa-solid fa-magnifying-glass"></i><span>Search Vehicle</span></button>
+    <div class="side-label nav-group-label">OPERATIONS</div>
+    <button class="nav" data-page="queue"><i class="fa-solid fa-list-ol"></i><span>Waiting Queue</span></button>
+    <button class="nav" data-page="history"><i class="fa-solid fa-clock-rotate-left"></i><span>History & Reports</span></button>
+    <button class="nav" data-page="ccp"><i class="fa-solid fa-shield-halved"></i><span>Smart Safety & Groups</span></button>
+    <div class="side-label nav-group-label">INTELLIGENCE</div>
+    <button class="nav" data-page="dsa"><i class="fa-solid fa-diagram-project"></i><span>DSA Visualizer</span></button>
+    <button class="nav" data-page="trees"><i class="fa-solid fa-tree"></i><span>BST & AVL Trees</span></button>
+    <button class="nav" data-page="stats"><i class="fa-solid fa-chart-column"></i><span>Statistics</span></button>
+    <div class="side-label nav-group-label">ADMINISTRATION</div>
+    <button class="nav" data-page="settings"><i class="fa-solid fa-sliders"></i><span>Settings</span></button>
+  </nav>
+  <div class="bottom"><div class="sidebar-user"><span class="user-avatar"><i class="fa-solid fa-user-shield"></i></span><div class="sidebar-user-info"><strong>admin</strong><small>Administrator</small></div></div><form method="post" action="/logout" class="trace-logout-form"><input type="hidden" name="csrf_token" value="{{ csrf }}"><button class="trace-logout" type="submit" title="Sign out"><i class="fa-solid fa-right-from-bracket"></i><span> Sign out</span></button></form><span class="online" id="serverStatus"><i class="fa-solid fa-circle"></i> Connecting...</span><button id="reset" title="Reset Parking"><i class="fa-solid fa-rotate-right"></i><span> Reset Parking</span></button></div>
+</aside>
+
+<main>
+<header class="premium-topbar"><div class="premium-page-title"><small><i class="fa-solid fa-layer-group"></i> CONTROL CENTER / <span>SMARTPARK TRACE</span></small><h1 id="title">Dashboard</h1></div><div class="header-meta"><span class="sync" id="phase9LastSync" aria-live="polite">Connecting…</span><span id="clock"></span><span class="header-user" title="Signed in as admin"><i class="fa-solid fa-user-shield"></i></span></div></header>
+<div id="toast"></div>
+
+<section id="dashboard" class="page active">
+  <div class="hero">
+    <div><small>SMARTPARK CONTROL CENTER</small><h2>Every space.<br><span>Perfectly managed.</span></h2><p>Manage every building, parking bay and vehicle from one intelligent control center.</p><div class="hero-actions"><button class="primary" data-page="entry"><i class="fa-solid fa-plus"></i> Park Vehicle</button><button class="ghost" data-page="trees"><i class="fa-solid fa-tree"></i> Explore Live Data</button></div></div>
+    <div class="premium-hero-visual" aria-hidden="true"><div class="hero-visual-caption"><span class="hero-pulse"></span> LIVE PARKING NETWORK</div><div class="hero-road-network"><div class="hero-drive-line"></div><div class="hero-garage-tile"><i class="fa-solid fa-building"></i><strong>A</strong><span>BUILDING</span></div><div class="hero-garage-tile active"><i class="fa-solid fa-car-side"></i><strong>B</strong><span>BUILDING</span></div><div class="hero-garage-tile"><i class="fa-solid fa-square-parking"></i><strong>C</strong><span>BUILDING</span></div></div><div class="hero-visual-bottom"><i class="fa-solid fa-shield-halved"></i> Intelligent allocation &amp; monitoring</div></div>
+  </div>
+  <div class="cards dashboard-cards">
+    <div class="stat-card purple"><i class="fa-solid fa-square-parking"></i><span>Total Slots</span><b id="total">12</b><em>Parking capacity</em></div>
+    <div class="stat-card mint"><i class="fa-solid fa-circle-check"></i><span>Usable Slots</span><b id="available">12</b><em id="phase9FreeDetail">Reachable and unrestricted</em></div>
+    <div class="stat-card coral"><i class="fa-solid fa-car"></i><span>Occupied</span><b id="occupied">0</b><em>Currently parked</em></div>
+    <div class="stat-card amber"><i class="fa-solid fa-hourglass-half"></i><span>Waiting</span><b id="waiting">0</b><em>Emergency → VIP → Normal</em></div>
+    <div class="stat-card pink"><i class="fa-solid fa-wallet"></i><span>Revenue</span><b id="revenue">Rs. 0</b><em>Collected so far</em></div>
+  </div>
+  <div class="dashboard-grid">
+    <div class="panel panel-accent"><div class="panel-title"><div><span>LIVE</span><h3>Parking Overview</h3></div><button class="icon-btn" data-page="parking"><i class="fa-solid fa-arrow-up-right-from-square"></i></button></div><div id="mini" class="mini"></div></div>
+    <div class="panel"><div class="panel-title"><div><span>ACTIVITY</span><h3>Recent Exits</h3></div><button class="icon-btn" data-page="history"><i class="fa-solid fa-clock-rotate-left"></i></button></div><div id="recent"></div></div>
+  </div>
+</section>
+
+<section id="parking" class="page"><div class="heading"><div><small>LIVE PARKING OVERVIEW</small><h2>Building-Wise Parking Map</h2><p>Explore buildings, floors and vehicle-size-compatible slots. Occupancy comes from the C++ engine.</p></div><div class="legend"><span><i class="dot free"></i>Available</span><span><i class="dot busy"></i>Occupied</span><span><i class="dot vip"></i>Priority</span></div></div>
+<div class="panel filters"><label>Building<select id="filterBuilding"><option value="">All buildings</option><option value="A">Building A</option><option value="B">Building B</option><option value="C">Building C</option></select></label><label>Floor<select id="filterFloor"><option value="0">All floors</option></select></label><label>Slot Capacity<select id="filterSize"><option value="">All sizes</option><option>Small</option><option>Medium</option><option>Large</option></select></label><span id="filterCount">0 slots</span></div>
+<div class="parking"><div class="road"><i class="fa-solid fa-arrow-down"></i> ENTRANCE</div><div id="map" class="map"></div><div class="road"><i class="fa-solid fa-arrow-down"></i> EXIT</div></div><div class="slot-modal" id="slotModal" hidden aria-hidden="true">
+  <div class="slot-modal-shade" data-close-slot="1"></div>
+  <section class="slot-modal-card" role="dialog" aria-modal="true" aria-labelledby="slotModalTitle" tabindex="-1">
+    <div class="slot-modal-bar"><span><i class="fa-solid fa-square-parking"></i> Parking space details</span><button id="closeSlotModal" type="button" aria-label="Close parking details"><i class="fa-solid fa-xmark"></i></button></div>
+    <div id="slotModalContent"></div>
+  </section>
+</div></section>
+<section id="buildings" class="page"><div class="heading"><div><small>LIVE · THREE BUILDINGS</small><h2>Buildings & Floors</h2><p>Real-time capacity and occupied vehicles for Building A, B and C.</p></div></div><div id="buildingStats" class="buildings"></div><div class="panel info"><h3>Capacity rules</h3><p><b>Small:</b> Motorcycle · <b>Medium:</b> Car, Sedan, Sports Car, Taxi, Emergency · <b>Large:</b> SUV, Van, Pickup, Bus and Truck.</p><p>A vehicle needs a same-sized or larger free slot. Capacity-aware best-fit allocation respects reserved/disputed slots and Graph route accessibility.</p></div></section>
+
+<section id="routes" class="page">
+  <div class="heading"><div><small>LIVE · C++ GRAPH + BFS + DFS</small><h2>Parking Route Navigator</h2>
+  <p>Explore the real building road graph. Find shortest routes by road-segment count, block a lane and watch BFS choose another accessible path.</p></div></div>
+  <div class="summary">
+    <div class="panel metric"><span><i class="fa-solid fa-diagram-project"></i> Road Segments</span><b id="roadCount">—</b></div>
+    <div class="panel metric"><span><i class="fa-solid fa-road-barrier"></i> Blocked Roads</span><b id="blockedCount">—</b></div>
+    <div class="panel metric"><span><i class="fa-solid fa-code-branch"></i> Graph Algorithm</span><b>BFS / DFS</b></div>
+  </div>
+  <div class="panel route-form">
+    <h3><i class="fa-solid fa-location-arrow"></i> Find Route to a Parking Slot</h3>
+    <div class="controls"><label>Destination Slot<select id="routeSlot"><option value="">Select a slot</option></select></label>
+    <button type="button" class="primary" id="runBfs">Run BFS + DFS Check</button></div>
+    <div id="routeResult" role="status" aria-live="polite" class="result">Choose a parking slot to see its road route.</div>
+  </div>
+  <div class="panel graph-panel"><div class="panel-title"><div><span>LIVE C++ ROAD GRAPH</span><h3>Building Gates, Ramps & Lanes</h3></div><span class="legend">Green: selected BFS path · Red dashed: blocked road</span></div>
+  <div id="roadGraph" class="graph"><div class="empty-state">Loading Graph from C++...</div></div></div>
+  <div class="panel admin">
+    <h3><i class="fa-solid fa-shield-halved"></i> Admin — Block / Reopen Road Segment</h3>
+    <p>Simulate a blocked access lane. Restricted edges stay saved after restart; opening them again checks the waiting queue for reachable slots.</p>
+    <form id="roadRuleForm" class="controls"><label>Road Connection<select id="roadEdge" required></select></label>
+    <label>Action<select id="roadMode"><option value="1">Block road</option><option value="0">Reopen road</option></select></label>
+    <button type="submit" class="primary">Apply Road Rule</button></form>
+    <p class="note" id="roadHint">Road changes affect new allocations; vehicles already parked stay parked.</p>
+  </div>
+</section>
+
+<section id="entry" class="page"><div class="heading"><small>VEHICLE MANAGEMENT</small><h2>Vehicle Entry</h2><p>Add standard, commercial, emergency or performance vehicles.</p></div><div class="two"><form id="entryForm" class="panel form"><h3><i class="fa-solid fa-car-side"></i> New Parking Entry</h3><label>Vehicle Number<input id="number" required maxlength="20" minlength="2" placeholder="ABC-123" autocomplete="off"></label><label>Owner Name<input id="owner" required maxlength="70" placeholder="Shaheryar Khan" autocomplete="name"></label><label>Vehicle Type<select id="type"><option>Car</option><option>Motorcycle</option><option>Van</option><option>Emergency</option><option>Sedan</option><option>SUV</option><option>Sports Car</option><option>Pickup</option><option>Bus</option><option>Taxi</option><option>Truck</option></select></label><div class="selects"><label>Preferred Building<select id="entryBuilding"><option value="">Auto / Any building</option><option value="A">Building A</option><option value="B">Building B</option><option value="C">Building C</option></select></label><label>Preferred Floor<select id="entryFloor"><option value="0">Auto / Any floor</option></select></label></div><label class="check"><input id="priority" type="checkbox"> <span>Priority / VIP vehicle</span></label><button type="submit" class="primary full"><i class="fa-solid fa-square-parking"></i> Park Vehicle</button><div class="recommend">
+  <button id="previewAllocation" type="button" class="ghost full"><i class="fa-solid fa-wand-magic-sparkles"></i> Preview Smart Allocation</button>
+  <p id="allocationPreview" aria-live="polite">The C++ engine will select the best-fit eligible slot.</p>
+</div><div id="entryTicket" class="entry-ticket" hidden></div></form><div class="panel vehicle-showcase"><h3>Supported Vehicles</h3><div class="vehicle-grid"><div><i class="fa-solid fa-car-side"></i><span>Car</span></div><div><i class="fa-solid fa-motorcycle"></i><span>Motorcycle</span></div><div><i class="fa-solid fa-car"></i><span>SUV</span></div><div><i class="fa-solid fa-gauge-high"></i><span>Sports</span></div><div><i class="fa-solid fa-truck"></i><span>Truck</span></div><div><i class="fa-solid fa-bus"></i><span>Bus</span></div><div><i class="fa-solid fa-van-shuttle"></i><span>Van</span></div><div><i class="fa-solid fa-truck-medical"></i><span>Emergency</span></div></div><div class="tip"><i class="fa-solid fa-lightbulb"></i> Tick Priority/VIP to put a high-priority vehicle ahead of normal waiting vehicles.</div></div></div></section>
+
+<section id="exit" class="page"><div class="heading"><small>BILLING</small><h2>Vehicle Exit</h2><p>Close a parking session and update the stack, history, revenue and queue automatically.</p></div><div class="two"><form id="exitForm" class="panel form"><h3><i class="fa-solid fa-receipt"></i> Process Exit</h3><label>Vehicle Number<input id="exitNumber" required placeholder="ABC-123"></label><div class="note"><i class="fa-solid fa-clock"></i> Automatic start/end timestamps. Even 20 minutes counts as one started hour. No manual hours.</div><button type="submit" class="primary full"><i class="fa-solid fa-receipt"></i> Exit & Generate Receipt</button></form><div id="bill" class="panel center">No active bill.</div></div></section>
+
+<section id="search" class="page"><div class="heading"><small>LINEAR SEARCH</small><h2>Search Vehicle</h2><p>Search active and waiting vehicles by number, owner, type or slot.</p></div><div class="panel search"><input id="query" placeholder="e.g. ABC-123, Shaheryar, SUV, P04"><button class="primary" id="searchBtn"><i class="fa-solid fa-magnifying-glass"></i> Search</button></div><div id="results"></div></section>
+
+<section id="queue" class="page">
+<div class="heading"><small>FAIRNESS & ELIGIBILITY</small><h2>Waiting Queue Control</h2>
+<p>SmartPark C++ schedules Emergency → VIP → Normal, with FIFO inside each level. Only compatible free slots can be assigned.</p></div>
+<div class="queue-stats" aria-label="Waiting priority statistics">
+  <div class="panel stat"><span>Emergency</span><strong id="queueEmergencies">0</strong></div>
+  <div class="panel stat"><span>VIP</span><strong id="queueVips">0</strong></div>
+  <div class="panel stat"><span>Normal</span><strong id="queueNormals">0</strong></div>
+</div>
+<div class="panel"><h3><i class="fa-solid fa-link"></i> Actual Queue · FIFO Arrival Order</h3><div id="queueVisual"></div></div>
+<div class="panel schedule"><h3><i class="fa-solid fa-bolt"></i> Real C++ Dispatch Ranking</h3>
+<p class="intro">A higher rank is not a guaranteed next parking spot: size, building, floor and reserved-slot restrictions are always checked.</p>
+<div id="queueBoard" aria-live="polite"></div></div>
+<form id="queueAdminForm" class="panel form admin"><h3><i class="fa-solid fa-user-gear"></i> Admin Queue Management</h3>
+<div class="selects"><label>Waiting Vehicle<select id="queuePlate" required><option value="">No waiting vehicles</option></select></label>
+<label>Action<select id="queueAction"><option value="vip">Promote to VIP</option><option value="normal">Set Normal Priority</option><option value="cancel">Cancel Waiting Ticket</option></select></label>
+<button type="submit" class="primary">Apply Change</button></div>
+<p>Cancellation removes only the waiting ticket. Emergency vehicles cannot be downgraded. Each confirmed change is saved by the C++ engine.</p></form>
+</section>
+
+<section id="history" class="page"><div class="heading"><small>SQLITE + C++ HISTORY</small><h2>Parking History & Reports</h2><p>Find completed or ongoing parking sessions by date, building, floor, slot and plate. Report totals are based on completed exits in each period.</p></div>
+  <form class="panel phase8-panel" id="phase8Filters"><h3><i class="fa-solid fa-calendar-days"></i> Historical Report Center</h3>
+    <div class="phase8-fields">
+      <label>Period<select id="phase8Period"><option value="week">Week (Monday–Sunday)</option><option value="month">Month (calendar)</option></select></label>
+      <label>Date in period<input id="phase8Date" type="date" required></label>
+      <label>Building<select id="phase8Building"><option value="">All buildings</option><option>A</option><option>B</option><option>C</option></select></label>
+      <label>Floor<select id="phase8Floor"><option value="0">All floors</option><option value="1">Floor 1</option><option value="2">Floor 2</option><option value="3">Floor 3</option><option value="4">Floor 4</option></select></label>
+      <label>Exact slot<input id="phase8Slot" maxlength="10" placeholder="A-F1-S02"></label>
+      <label>Exact vehicle plate<input id="phase8Plate" maxlength="20" placeholder="ABC-123"></label>
+    </div>
+    <div class="phase8-buttons"><button class="primary" type="submit"><i class="fa-solid fa-magnifying-glass-chart"></i> Generate Report</button><button class="ghost" type="button" id="phase8Csv"><i class="fa-solid fa-file-csv"></i> Export Filtered CSV</button></div>
+    <p class="phase8-footnote" id="phase8PeriodLabel">Select a date. Stays crossing week/month boundaries are included. Revenue counts only exits completed in the selected period.</p>
+  </form>
+  <div class="phase8-cards" aria-live="polite">
+    <div class="panel"><small>Arrivals</small><b id="phase8Arrivals">—</b></div>
+    <div class="panel"><small>Completed Exits</small><b id="phase8Departures">—</b></div>
+    <div class="panel"><small>Period Revenue</small><b id="phase8Revenue">—</b></div>
+    <div class="panel"><small>Occupied Vehicle-Minutes</small><b id="phase8Minutes">—</b></div>
+  </div>
+  <div class="two phase8-analysis">
+    <div class="panel"><h3>Building Revenue</h3><div id="phase8BuildingBars" class="phase8-barlist">Generate a report to see records.</div></div>
+    <div class="panel"><h3>Most-Used Parking Slots</h3><div id="phase8TopSlots" class="phase8-barlist">Generate a report to see records.</div></div>
+  </div>
+  <div class="panel table table"><h3>Matching Parking Sessions <small id="phase8RecordCount"></small></h3>
+    <div class="phase8-scroll"><table><thead><tr><th>Ticket</th><th>Vehicle</th><th>Building / Floor</th><th>Slot</th><th>Entry</th><th>Exit</th><th>Started Hours</th><th>Fee</th></tr></thead><tbody id="phase8ReportBody"><tr><td colspan="8">Select filters and generate a report.</td></tr></tbody></table></div>
+    <div class="phase8-buttons"><button class="ghost" type="button" id="phase8Prev">Previous page</button><span id="phase8Paging">Page 1</span><button class="ghost" type="button" id="phase8Next">Next page</button></div>
+  </div>
+  <div class="two phase8-analysis">
+    <form class="panel phase8-lookup" id="phase8Lookup"><h3><i class="fa-solid fa-location-dot"></i> Who Was in This Slot?</h3><p>Exact local date/time historical occupancy lookup, including currently parked sessions.</p>
+      <label>Parking Slot<input id="phase8LookupSlot" placeholder="A-F1-S02" maxlength="10" required></label>
+      <label>Past Date & Time<input id="phase8At" type="datetime-local" required></label>
+      <button class="primary" type="submit">Find Vehicle at That Time</button><div class="phase8-lookup-result" id="phase8LookupResult" aria-live="polite">No lookup yet.</div>
+    </form>
+    <div class="panel"><h3><i class="fa-solid fa-list-check"></i> Session & Admin Audit</h3><div id="phase8Audit" class="phase8-audit">Recorded entries, exits and admin road/slot changes appear here.</div><button class="ghost" type="button" id="phase8RefreshAudit">Refresh Audit</button></div>
+  </div>
+  <div class="panel phase8-table"><h3>Latest Vehicle Exits</h3><table><thead><tr><th>Vehicle</th><th>Slot</th><th>Type</th><th>Owner</th><th>Fee</th><th>Exit</th></tr></thead><tbody id="historyBody"></tbody></table></div>
+</section>
+
+<section id="dsa" class="page"><div class="heading"><small>LIVE DATA STRUCTURES</small><h2>DSA Visualizer</h2><p>These counts and nodes are generated from the current SmartPark state — calculated from actual parking operations.</p></div>
+  <div class="dsa-metrics"><div><i class="fa-solid fa-link"></i><span>Linked List Nodes</span><b id="dsaLinkedCount">0</b></div><div><i class="fa-solid fa-layer-group"></i><span>Queue Nodes</span><b id="dsaQueueCount">0</b></div><div><i class="fa-solid fa-box-archive"></i><span>Stack Records</span><b id="dsaStackCount">0</b></div><div><i class="fa-solid fa-bolt"></i><span>Priority Queue Items</span><b id="dsaPriorityCount">0</b></div></div>
+  <div class="dsa"><div class="panel"><h3><i class="fa-solid fa-link"></i> Linked List</h3><div id="linked"></div><small>Active vehicles · search O(n)</small></div><div class="panel"><h3><i class="fa-solid fa-box-archive"></i> Stack</h3><div id="stack"></div><small>Latest exits at TOP · push/pop O(1)</small></div><div class="panel"><h3><i class="fa-solid fa-layer-group"></i> Queue</h3><div id="qDsa"></div><small>Arrival order · FIFO within the same priority level</small></div><div class="panel"><h3><i class="fa-solid fa-bolt"></i> Priority Queue</h3><div id="pq"></div><small>Waiting only · Emergency, then VIP, then normal (FIFO for ties)</small></div></div>
+  <div class="dsa dsa-extra"><div class="panel"><h3><i class="fa-solid fa-arrows-left-right"></i> Doubly Linked List</h3><div id="doubly"></div><small>Exit history: traverse forward with next and backward with prev</small></div><div class="panel"><h3><i class="fa-solid fa-arrows-rotate"></i> Circular Linked List</h3><div id="circular"></div><small>All configured parking slots: the last node points back to HEAD (not a Circular Queue)</small></div></div>
+  <div class="panel dsa-feature-link"><div><strong><i class="fa-solid fa-tree"></i> BST & AVL Tree Visualizer</strong><p>Watch the real C++ ticket indexes, balancing and rotations, or try your own values.</p></div><button class="primary" data-page="trees">Open Trees <i class="fa-solid fa-arrow-right"></i></button></div>
+  <div class="panel phase6-panel" id="phase6Lab">
+  <div class="panel-title"><div><span>LIVE C++ ANALYTICS</span><h3>Algorithm Performance Lab</h3><p>Compare real ticket search paths and sorting operations. Read-only analysis: parking data will not change.</p></div></div>
+  <div class="phase6-grid">
+    <div class="phase6-area"><h4>Live ticket search</h4><p>Same active Ticket ID: Linear vs BST vs AVL</p>
+      <div class="phase6-controls"><label>Ticket ID (numeric)<input id="phase6TicketKey" type="number" min="1" max="99999999" value="1"></label>
+      <button class="primary" id="phase6TicketRun" type="button">Compare Search</button></div>
+      <div id="phase6TicketResults" class="phase6-result" aria-live="polite">Enter a parked ticket ID and click Compare Search.</div>
+    </div>
+    <div class="phase6-area"><h4>Real record sorting</h4><p>Bubble vs Selection comparison and swap counts</p>
+      <div class="phase6-controls"><label>Dataset<select id="phase6SortSource"><option value="active">Active + Waiting</option><option value="history">Exit History</option></select></label>
+      <label>Sort By<select id="phase6SortField"><option value="number">Vehicle Number</option><option value="fee">Parking Fee</option></select></label>
+      <button class="primary" id="phase6SortRun" type="button">Compare Sorting</button></div>
+      <div id="phase6SortResults" class="phase6-result" aria-live="polite">Choose a dataset and sorting field.</div>
+    </div>
+  </div>
+</div>
+<div class="panel sort-panel"><div class="panel-title"><div><span>ALGORITHMS LAB</span><h3>Sorting Step Visualizer</h3></div></div><div class="sort-toolbar"><label>Values (2–12 numbers)<input id="sortValues" value="45, 12, 38, 9, 21" maxlength="90" autocomplete="off"></label><label>Algorithm<select id="sortAlgorithm"><option value="bubble">Bubble Sort</option><option value="selection">Selection Sort</option></select></label><button class="primary" id="sortBuild">Generate Steps</button></div><div class="sort-bars" id="sortBars"></div><div class="tree-playbar"><button class="ghost" id="sortPrev">Previous</button><span id="sortStepLabel">Choose an algorithm to begin.</span><button class="primary" id="sortNext">Next Step</button></div></div>
+  <div class="complex"><b>Linked List Search <span>O(n)</span></b><b>Queue Enqueue <span>O(1)</span></b><b>Stack Push/Pop <span>O(1)</span></b><b>Linear Search <span>O(n)</span></b><b>Bubble Sort <span>O(n²)</span></b></div>
+</section>
+
+<section id="trees" class="page">
+  <div class="heading trees-heading"><div><small>LIVE · C++ ENGINE</small><h2><i class="fa-solid fa-tree"></i> BST & AVL Visualizer</h2><p>See the exact shape of the C++ Binary Search Tree and self-balancing AVL Tree. Live mode uses parked vehicle ticket IDs. Live records update automatically.</p></div><div class="engine-tag"><i class="fa-solid fa-code"></i> Powered by C++</div></div>
+  <div class="tree-top-controls"><div class="tree-segment" role="group" aria-label="Data source"><button id="treeModeLive" class="selected" type="button">Live Parking</button><button id="treeModePractice" type="button">Practice Mode</button></div><div class="tree-segment" role="group" aria-label="Tree structure"><button id="treeTypeAvl" class="selected" type="button">AVL Tree</button><button id="treeTypeBst" type="button">BST Tree</button></div><button id="treeRefresh" class="ghost"><i class="fa-solid fa-rotate"></i> Refresh</button></div>
+  <div class="tree-stats"><div><small>Nodes</small><b id="treeNodes">0</b></div><div><small>Tree Height</small><b id="treeHeight">0</b></div><div><small>Root Key</small><b id="treeRoot">—</b></div><div><small>Leaf Nodes</small><b id="treeLeaves">0</b></div><div><small>Balance</small><b id="treeBalance">—</b></div></div>
+  <div class="tree-main-layout"><div class="panel tree-main-panel"><div class="tree-panel-header"><div><h3 id="treeTitle">Live AVL Tree</h3><p id="treeCaption">Vehicle ticket IDs currently parked in SmartPark</p></div><div class="tree-key"><span class="key-root"></span> Root <span class="key-path"></span> Search path <span class="key-focus"></span> Active node</div></div><div class="tree-viewport" id="treeViewport" aria-live="polite"><div class="tree-empty">Loading your C++ tree…</div></div><div class="tree-playbar"><button id="treePrevious" class="ghost" disabled><i class="fa-solid fa-chevron-left"></i> Before</button><span id="treeFrameTitle">Current C++ tree</span><button id="treeNext" class="primary" disabled>After <i class="fa-solid fa-chevron-right"></i></button></div></div>
+  <div class="tree-side"><div class="panel tree-actions"><h3>Tree Operations</h3><p id="treeActionTip">Enter a numeric ticket ID to highlight its search path.</p><label for="treeKeyInput">Numeric node value</label><input id="treeKeyInput" type="number" min="1" max="99999999" step="1" placeholder="e.g. 30"><div class="tree-action-grid"><button id="treeInsert" class="primary" disabled><i class="fa-solid fa-plus"></i> Insert</button><button id="treeDelete" class="ghost" disabled><i class="fa-solid fa-trash"></i> Delete</button><button id="treeSearch" class="ghost"><i class="fa-solid fa-magnifying-glass"></i> Search</button><button id="treeClear" class="danger-btn" disabled><i class="fa-solid fa-rotate"></i> Clear</button></div><div class="tree-demo-actions"><small>Quick rotation examples</small><button id="treeDemoLL">LL</button><button id="treeDemoRR">RR</button><button id="treeDemoLR">LR</button><button id="treeDemoRL">RL</button></div></div><div class="panel tree-logs"><h3>Operation Details</h3><div id="treeOperationLog" class="tree-operation">No operation yet. Park a vehicle to view live tree updates.</div><div class="tree-info-note"><i class="fa-solid fa-circle-info"></i> Balance Factor = left subtree height − right subtree height.</div></div></div></div>
+  <div class="panel tree-traversal"><div><h3>Tree Traversals</h3><p>Calculated by recursive C++ functions, not simulated values.</p></div><div class="traversal-row"><b>Inorder</b><code id="treeInorder">—</code></div><div class="traversal-row"><b>Preorder</b><code id="treePreorder">—</code></div><div class="traversal-row"><b>Postorder</b><code id="treePostorder">—</code></div></div>
+</section>
+
+<section id="stats" class="page"><div class="heading"><small>ANALYTICS</small><h2>Statistics</h2><p>Live figures are calculated from the current parking state.</p></div><div class="cards three"><div class="stat-card purple"><span>Vehicles Served</span><b id="served">0</b></div><div class="stat-card mint"><span>Occupancy</span><b id="occPct">0%</b></div><div class="stat-card pink"><span>Total Revenue</span><b id="rev2">Rs. 0</b></div></div><div class="two"><div class="panel"><h3>Occupancy</h3><div class="progress"><span id="bar"></span></div><p id="occText">0 / 12 occupied</p></div><div class="panel"><h3>Vehicle Types</h3><div id="types"></div></div></div></section>
+
+<section id="ccp" class="page">
+  <div class="heading"><div><small>INTELLIGENT PARKING OPERATIONS</small><h2>Smart Safety & Groups</h2><p>Find your car, coordinate group parking and manage emergency routes. Algorithms run in the C++ engine.</p></div></div>
+  <div class="ccp-banner panel"><div><small>LIVE RESOURCE CONTROL</small><h3 id="ccpMode">Normal operation</h3><p id="ccpRecovery">Emergency admission lock: inactive</p></div><button class="ghost" id="ccpRefresh" type="button"><i class="fa-solid fa-arrows-rotate"></i> Refresh Status</button></div>
+  <div class="ccp-grid">
+    <div class="panel ccp-card"><div class="ccp-kicker"><i class="fa-solid fa-person-walking"></i> RAW AVL + BFS + STACK</div><h3>Find My Car</h3><p>Search by number plate, then walk from the pedestrian gate using the fewest available road segments.</p><form id="findMyCarForm"><label>Vehicle number plate<input id="ccpFindPlate" placeholder="ABC-123" maxlength="20" required autocomplete="off"></label><button class="primary" type="submit">Find Walking Route</button></form><pre class="ccp-result" id="ccpFindResult" aria-live="polite">Enter a parked vehicle plate.</pre></div>
+    <div class="panel ccp-card"><div class="ccp-kicker"><i class="fa-solid fa-triangle-exclamation"></i> EMERGENCY GRAPH CONTROL</div><h3>Emergency Evacuation</h3><p>Set the affected building. C++ locks normal inbound traffic and calculates alternate routes to unaffected exit gates.</p><form id="evacForm"><label>Affected building<select id="ccpEvacBuilding"><option value="A">Building A</option><option value="B">Building B</option><option value="C">Building C</option></select></label><div class="ccp-actions"><button class="danger-btn" type="submit">Activate Evacuation</button><button class="ghost" id="ccpEvacStop" type="button">End Evacuation</button></div></form><div class="ccp-result" id="ccpEvacResult" aria-live="polite">No emergency currently active.</div></div>
+    <div class="panel ccp-card"><div class="ccp-kicker"><i class="fa-solid fa-arrow-rotate-left"></i> PROVISIONAL HOLD + ROLLBACK STACK</div><h3>VIP Road Recovery</h3><p>Reserve a slot before arrival. If its access path blocks, C++ rolls back and reroutes the reservation or moves it to waiting.</p><form id="vipReserveForm"><label>VIP plate<input id="ccpVipPlate" placeholder="VIP-101" required maxlength="20"></label><label>Owner<input id="ccpVipOwner" placeholder="Owner name" required maxlength="70"></label><div class="ccp-inline"><label>Vehicle type<select id="ccpVipType"><option>Car</option><option>SUV</option><option>Sedan</option><option>Van</option><option>Pickup</option></select></label><label>Building<select id="ccpVipBuilding"><option value="">Any</option><option>A</option><option>B</option><option>C</option></select></label><label>Floor<select id="ccpVipFloor"><option value="0">Any</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label></div><button class="primary" type="submit">Reserve Pending Slot</button></form><form id="vipConfirmForm" class="ccp-confirm"><label>Confirm arriving plate<input id="ccpConfirmPlate" placeholder="VIP-101" required maxlength="20"></label><button type="submit" class="ghost">Confirm Arrival</button></form><div class="ccp-result" id="ccpVipResult">No provisional reservations.</div></div>
+    <div class="panel ccp-card"><div class="ccp-kicker"><i class="fa-solid fa-cars"></i> SLIDING WINDOW + LINKED GROUP QUEUE</div><h3>Convoy / Family Parking</h3><p>Allocate 3–4 contiguous slots. If not possible, try a 2+2 split or keep the group together in one waiting node.</p><form id="convoyForm"><div class="ccp-inline"><label>Group size<select id="ccpGroupSize"><option value="4">4 vehicles</option><option value="3">3 vehicles</option></select></label><label>Building<select id="ccpGroupBuilding"><option value="">Any</option><option>A</option><option>B</option><option>C</option></select></label><label>Floor<select id="ccpGroupFloor"><option value="0">Any</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option></select></label></div><label class="ccp-check"><input type="checkbox" id="ccpGroupVip"> VIP convoy priority</label><div id="ccpVehicleRows" class="ccp-vehicle-rows"></div><button class="primary" type="submit">Allocate Group</button></form><div class="ccp-result" id="ccpGroupResult">No group request yet.</div></div>
+  </div>
+  <div class="panel"><div class="panel-title"><div><span>LIVE FROM C++</span><h3>Pending Reservations & Group Queue</h3></div></div><div id="ccpQueueOverview" class="ccp-overview">Loading...</div></div>
+  <div class="panel ccp-guidance"><b><i class="fa-solid fa-circle-info"></i> Safety note</b><p>Evacuation routing is a software simulation for academic demonstration. It uses configured graph lanes and manual road closures, not real-time physical hazard sensors or official evacuation instructions.</p></div>
+</section>
+
+<section id="settings" class="page"><div class="heading"><small>SYSTEM</small><h2>Settings</h2><p>Manage parking configuration, access rules and charges.</p></div><div class="two"><div class="panel settings-card"><div class="setting-icon"><i class="fa-solid fa-rotate"></i></div><h3>Refresh Live Data</h3><p>Pull the latest state from the Flask server and update every visible DSA component.</p><button class="primary" id="refreshNow"><i class="fa-solid fa-arrows-rotate"></i> Refresh Now</button></div><div class="panel settings-card danger-card"><div class="setting-icon"><i class="fa-solid fa-trash-can"></i></div><h3>Reset Parking Records</h3><p>Clear active vehicles, queue, history and revenue and begin with an empty parking system.</p><button class="danger-btn" id="settingsReset"><i class="fa-solid fa-rotate-right"></i> Reset SmartPark</button></div></div>
+  <div class="panel slot-config">
+<h3><i class="fa-solid fa-shield-halved"></i> Slot Conflict & Reservation Management</h3>
+<p>Temporarily close disputed/unsafe slots or reserve them for Emergency/VIP. You cannot restrict an occupied slot. Changes persist in C++ state.</p>
+<form id="slotRuleForm" class="selects">
+<label>Parking Slot<select id="ruleSlot" required></select></label>
+<label>New Rule<select id="ruleMode"><option value="0">Normal (available)</option><option value="1">Priority Reserved</option><option value="2">Disputed / Closed</option></select></label>
+<label>Reason / Note<input id="ruleNote" maxlength="90" placeholder="e.g. Lane maintenance"></label>
+<button class="primary" type="submit">Apply Slot Rule</button></form>
+<p id="slotRuleSummary">Select a slot to manage a reported conflict.</p><div id="slotRuleStatus" role="status" aria-live="polite"></div></div>
+<div class="panel layout-config"><h3><i class="fa-solid fa-building"></i> Building & Floor Configuration</h3><p>Three buildings: A, B and C. Configure the number of floors and slots per floor. Parking and waiting queue must be empty before resizing.</p><form id="layoutForm" class="selects"><label>Floors in each building (1–4)<input id="layoutFloors" type="number" min="1" max="4" value="2" required></label><label>Slots per floor (3–20)<input id="layoutSlots" type="number" min="3" max="20" value="6" required></label><button class="primary" type="submit">Save Building Layout</button></form><p id="layoutSummary">Current layout: 3 buildings, 2 floors each, 6 slots per floor.</p></div>
+  <div class="panel rates-panel"><h3><i class="fa-solid fa-tags"></i> Parking Rates</h3><p>Admin can edit rates by vehicle category. Each started hour is charged in full, and updated rates apply to subsequent exits.</p><div class="rates-scroll"><table><thead><tr><th>Vehicle Type</th><th>Per Hour</th><th>Admin Action</th></tr></thead><tbody id="rates"><tr><td colspan="3">Loading rates...</td></tr></tbody></table></div></div>
+</section>
+</main></div>
+<script>window.SMARTPARK_CSRF = {{ csrf|tojson }};</script>
+<script src="/static/icons.js"></script>
+<script src="/static/script.js"></script>
+<script src="/static/premium_nav.js"></script>
+<script src="/static/visualizers.js"></script>
+<script src="/static/phase6_lab.js"></script>
+<script src="/static/phase8_history.js"></script>
+<script src="/static/ccp.js"></script>
+</body></html>
