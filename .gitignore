@@ -1,0 +1,34 @@
+# Generated C++ build outputs
+*.exe
+*.obj
+*.o
+*.out
+*.pdb
+*.dll
+*.so
+*.a
+build/
+FullStack_Web/build/
+# Python environments and caches
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ipynb_checkpoints/
+# Local application state and secrets
+.env
+.env.*
+!.env.example
+*.sqlite
+*.sqlite3
+*.db
+admin_web.json
+.web_session_secret
+cpp_state.txt
+parking_rates.txt
+# Editor and OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
